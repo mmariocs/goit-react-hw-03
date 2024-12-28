@@ -1,0 +1,23 @@
+/* .wrapper {
+  display: flex;
+} */
+.label {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  align-items: start;
+  gap: 10px;
+  font-size: bold;
+  font-weight: bold;
+  text-align: left;
+  margin-bottom: 30px;
+}
+.label {
+}
+
+.input {
+  border-radius: 5px;
+  padding: 5px;
+  box-shadow: 0 0 1px 1px lightgray;
+  min-width: 320px;
+}

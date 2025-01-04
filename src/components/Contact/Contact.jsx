@@ -1,16 +1,22 @@
-import React from "react";
+import { IoMdPerson } from "react-icons/io";
+import { FaPhoneAlt } from "react-icons/fa";
 import s from "./Contact.module.css";
-const Contact = ({ contact, onDeleteContact }) => {
+
+const Contact = ({ id, name, number, handleDeleteContact }) => {
   return (
-    <div className={s.contact_container}>
-      <div className={s.contact_container_text}>
-        <p className={s.contact_name}>{contact.name}</p>
-        <p className={s.contact_number}>{contact.number}</p>
-      </div>
+    <div className={s.contactWrapper}>
+      <ul className={s.infoList}>
+        <li className={s.infoItem}>
+          <IoMdPerson /> <p>{name}</p>
+        </li>
+        <li className={s.infoItem}>
+          <FaPhoneAlt /> <p>{number}</p>
+        </li>
+      </ul>
       <button
-        className={s.contact_btn}
         type="button"
-        onClick={() => onDeleteContact(contact.id)}
+        className={s.deleteBtn}
+        onClick={() => handleDeleteContact(id)}
       >
         Delete
       </button>

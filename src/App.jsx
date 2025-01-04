@@ -1,51 +1,63 @@
-import { useState, useEffect } from "react";
-
-import "./App.css";
-import SearchBox from "./components/SearchBox/SearchBox";
 import ContactList from "./components/ContactList/ContactList";
+import SearchBox from "./components/SearchBox/SearchBox";
 import ContactForm from "./components/ContactForm/ContactForm";
+
+import { useEffect, useState } from "react";
 import { nanoid } from "nanoid";
 
-const App = () => {
-  const [contacts, setContacts] = useState(() => {
-    const savedContacts = localStorage.getItem("contacts");
-    return savedContacts
-      ? JSON.parse(savedContacts)
-      : [
-          { id: "id-1", name: "Rosie Simpson", number: "459-12-56" },
-          { id: "id-2", name: "Hermione Kline", number: "443-89-12" },
-          { id: "id-3", name: "Eden Clements", number: "645-17-79" },
-          { id: "id-4", name: "Annie Copeland", number: "227-91-26" },
-        ];
-  });
-  const [filter, setFilter] = useState("");
-  useEffect(() => {
-    localStorage.setItem("contacts", JSON.stringify(contacts));
-  }, [contacts]);
+import "./App.css";
 
-  const addContact = (name, number) => {
-    const newContact = { id: nanoid(), name, number };
-    setContacts((prevContacts) => [...prevContacts, newContact]);
+const defaultContactData = [
+  { id: "id-1", name: "Rosie Simpson", number: "459-12-56" },
+  { id: "id-2", name: "Hermione Kline", number: "443-89-12" },
+  { id: "id-3", name: "Eden Clements", number: "645-17-79" },
+  { id: "id-4", name: "Annie Copeland", number: "227-91-26" },
+];
+
+function App() {
+  const [contactData, setContactData] = useState(() => {
+    const savedData = JSON.parse(window.localStorage.getItem(`contactData`));
+    if (savedData !== null) {
+      return savedData;
+    }
+    return defaultContactData;
+  });
+  const [searchName, setSearchName] = useState("");
+
+  const handleSearchInput = (e) => {
+    setSearchName(e.target.value);
   };
-  const deleteContact = (id) => {
-    setContacts((prevContacts) =>
-      prevContacts.filter((contact) => contact.id !== id)
-    );
-  };
-  const filteredContacts = contacts.filter((contact) =>
-    contact.name.toLowerCase().includes(filter.toLowerCase())
+  const filteredContactData = contactData.filter((contact) =>
+    contact.name.toLowerCase().includes(searchName.toLowerCase())
   );
+
+  const handleDeleteContact = (id) => {
+    setContactData((prev) => prev.filter((contact) => contact.id !== id));
+  };
+
+  const handleAddContact = (values, actions) => {
+    const id = nanoid();
+    setContactData((prev) => [...prev, values]);
+    values.id = id;
+
+    actions.resetForm();
+  };
+
+  useEffect(() => {
+    window.localStorage.setItem("contactData", JSON.stringify(contactData));
+  }, [contactData]);
+
   return (
-    <>
-      <h1>PhoneBook</h1>
-      <ContactForm onAddContact={addContact} />
-      <SearchBox filter={filter} onFilterChange={setFilter} />
+    <div>
+      <h1>Phonebook</h1>
+      <ContactForm handleAddContact={handleAddContact} />
+      <SearchBox handleSearchInput={handleSearchInput} />
       <ContactList
-        contacts={filteredContacts}
-        onDeleteContact={deleteContact}
+        contactData={filteredContactData}
+        handleDeleteContact={handleDeleteContact}
       />
-    </>
+    </div>
   );
-};
+}
 
 export default App;
